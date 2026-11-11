@@ -1,4 +1,4 @@
-# Ativação + configuração do cron-job.org (TEMPLATE)
+# Ativação + configuração do cron-job.org (dash-maya-shopp)
 
 > owner/repo: `metrics-odr/dash-maya-shopp` · URL do Pages:
 > `https://metrics-odr.github.io/dash-maya-shopp/`. O **token

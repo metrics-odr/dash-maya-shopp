@@ -1,7 +1,8 @@
 # Dashboard de Tráfego Pago — Maya Massafera (Ecommerce · BodySplash & Eau de Parfum)
 
-Dashboard publicado em **https://metrics-odr.github.io/dash-maya-ecommerce/**, gerado a partir do
-template de dashboards de tráfego pago. Config do cliente em `build/config.py` e `config.js`.
+Dashboard publicado em **https://metrics-odr.github.io/dash-maya-shopp/**, gerado a partir da
+engine de dashboards de tráfego pago. Repositório: `metrics-odr/dash-maya-shopp` (cópia do
+`dash-maya-ecommerce`). Config do cliente em `build/config.py` e `config.js`.
 
 ## Visão geral
 
@@ -100,11 +101,10 @@ normalmente você não precisa mexer em nada manualmente. Para conferir/forçar:
    **Actions** → workflow **"Build & Deploy Dashboard"** → **Run workflow**
    (branch `main`).
 4. Depois do primeiro deploy bem-sucedido, a URL pública aparece em **Settings
-   → Pages** e é sempre `https://metrics-odr.github.io/dash-maya-ecommerce/`.
+   → Pages** e é sempre `https://metrics-odr.github.io/dash-maya-shopp/`.
 5. Configure o cron-job.org para dar continuidade aos builds automáticos a cada
    30 min — passo a passo completo em **`SETUP-CRON.md`** (ele já vem com
-   placeholders `metrics-odr`/`dash-maya-ecommerce` para você substituir
-   pelos valores do seu `config.js`).
+   os valores `metrics-odr`/`dash-maya-shopp` já preenchidos, iguais aos do `config.js`).
 
 ## Como configurar a planilha/API (Google Sheets)
 
@@ -176,7 +176,7 @@ Passo a passo:
 1. `cp config.example.js config.js`.
 2. Preencha `GITHUB_USERNAME`, `GITHUB_REPOSITORY` e `PROJECT_NAME`.
 3. Use esses **mesmos valores** para substituir manualmente os placeholders
-   `metrics-odr` e `dash-maya-ecommerce` que aparecem em `SETUP-CRON.md`,
+   `metrics-odr` e `dash-maya-shopp` que aparecem em `SETUP-CRON.md`,
    `README.md` (este arquivo) e `CLAUDE.md` — são documentos Markdown estáticos,
    então a substituição não é automática (busque pelo texto exato no
    repositório e troque em cada ocorrência).

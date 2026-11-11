@@ -1,8 +1,9 @@
-# CLAUDE.md — Dashboard de Controle de Tráfego Pago (TEMPLATE)
+# CLAUDE.md — Dashboard de Controle de Tráfego Pago (Maya Massafera · dash-maya-shopp)
 
 > Este arquivo é lido automaticamente pelo Claude Code ao abrir o repositório.
-> Este é o repositório **TEMPLATE**, genérico — ainda não configurado para
-> nenhum cliente. A engine (`build/template.html`, `build/build.py`,
+> Este repositório (`metrics-odr/dash-maya-shopp`) já está **configurado** para a Maya
+> Massafera (cópia do `dash-maya-ecommerce`). O checklist abaixo é histórico, só para
+> replicar para um cliente novo. Alterações são publicadas **direto na `main`**. A engine (`build/template.html`, `build/build.py`,
 > `ia-worker/worker.js`) é genérica e não deve ser editada por cliente; os
 > valores do cliente ficam em **`build/config.py`** (config do funil) e
 > **`config.js`** (metadados de publicação no GitHub). Veja também `README.md`
@@ -67,7 +68,7 @@ no **GitHub Pages**, que cruza **Meta Ads / Google Ads / TikTok Ads** com o **GA
 de **Compras**, e se atualiza a cada ~30 min (build na nuvem via GitHub Actions, disparado
 pelo cron-job.org). **Somente leitura** das planilhas.
 
-- **URL pública:** `https://metrics-odr.github.io/dash-maya-ecommerce/`
+- **URL pública:** `https://metrics-odr.github.io/dash-maya-shopp/`
 - **Cliente/projeto:** `build/config.py` (`CLIENT_NAME`/`CLIENT_SUB`)
 - **Tipo de funil:** Ecommerce —
   `Gasto → Impressões → Cliques → Page Views → Product View → AddToCart → Checkouts → Compras → Faturamento`
