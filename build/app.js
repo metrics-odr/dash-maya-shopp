@@ -132,6 +132,9 @@ function scopeData(ch, ex, win, gf){
     if(ex!=='K') flt(STATE.mSelKw,'kw');
   }
   if(sel) fG=[];
+  /* Aba Meta Ads: compras/faturamento vêm das colunas Purchases e Purchases Conversion Value da própria
+     aba do Meta (linhas de mídia) — NÃO há cruzamento com a aba Compras. Visão Geral segue com todas as vendas. */
+  if(ch==='meta') fS=fM.filter(r=>r.pu||r.pr).map(r=>({d:r.d,ch:'meta',camp:r.camp,adset:r.adset,ad:r.ad,prod:'—',main:r.pu||0,val:r.pr||0,n:r.pu||0}));
   return {fM,fS,fG,sel};
 }
 
@@ -729,7 +732,13 @@ function renderChannel(){
   document.getElementById('adBlock').hidden=!realAds.length;
   document.getElementById('adTableBlock').hidden=!realAds.length;
   hbar('mContent', realAds.map(([label,a])=>({label,v:a.fat})), x=>x.v, cvar('--chart-faturamento'), 10, brl);
-  renderProdTable('mProd', S.fS);
+  const isMeta=ch==='meta';
+  ['mProdCard','buyersTitle','buyersCard'].forEach(id=>{ const e=document.getElementById(id); if(e) e.hidden=isMeta; });
+  if(!isMeta) renderProdTable('mProd', S.fS);
+  const pt=document.getElementById('mProdTitle'); if(pt) pt.textContent=isMeta?'Faturamento por anúncio':'Compras por produto';
+  const cn=document.getElementById('mCrossNote');
+  if(cn){ if(cn.dataset.orig===undefined) cn.dataset.orig=cn.innerHTML;
+    cn.innerHTML=isMeta?'Meta Ads: <b>Compras</b> e <b>Faturamento</b> vêm das colunas <b>Purchases</b> e <b>Purchases Conversion Value</b> da própria aba do Meta — sem cruzamento com a aba Compras. O funil do GA4 não existe nesse nível, por isso as tabelas mostram mídia + compras do Meta.':cn.dataset.orig; }
 
   const dl=dd.slice().reverse();
   renderTable({id:'tDaily', cols:ch==='meta'?META_DAILY_COLS:DAILY_COLS,
@@ -775,7 +784,7 @@ function renderChannel(){
   }
 
   /* Compradores: últimos pedidos (PII mascarada), respeitando canal + período */
-  const rows=BUYERS.filter(b=>b.ch===ch && dateActive(b.d));
+  const rows=ch==='meta'?[]:BUYERS.filter(b=>b.ch===ch && dateActive(b.d));
   document.getElementById('qCount').textContent=rows.length+' compras';
   renderTable({id:'tQual',
     cols:[{key:'d',label:'Data',type:'date'},{key:'nm',label:'Nome',type:'dim'},{key:'prod',label:'Produto',type:'dim',big:true},

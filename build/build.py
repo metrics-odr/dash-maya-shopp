@@ -393,12 +393,19 @@ def load_media(rows, ch):
          "vv3": ["3-second video views", "3 second video views"],
          "vv50": ["video watches at 50%", "video watches 50%"],
          "vv95": ["video watches at 95%", "video watches 95%"],
+         "pu": ["purchases"], "pr": ["purchases conversion value"],
          "link": ["creative instagram permalink", "instagram permalink", "permalink",
                   "creative link", "link do anuncio", "link do criativo"],
          "campaign_status": ["campaign status", "status da campanha"],
          "adset_status": ["ad set status", "adset status", "status do conjunto"],
          "ad_status": ["ad status", "status do anuncio"]},
         {"day": 0, "campaign": 1, "adset": 2, "ad": 3, "spent": 4})
+    if ch == "meta":
+        # Purchases / Purchases Conversion Value: match EXATO primeiro ("purchases" é substring do outro)
+        hn = [norm(h) for h in rows[0]]
+        for k, name in (("pu", "purchases"), ("pr", "purchases conversion value")):
+            if name in hn:
+                midx[k] = hn.index(name)
     out, ad_links = [], {}
     for row in rows[1:]:
         if not any((c or "").strip() for c in row):
@@ -418,6 +425,10 @@ def load_media(rows, ch):
                "sp": round(to_float(cell(row, midx["spent"])), 4),
                "im": to_float(cell(row, midx["impr"])),
                "cl": to_float(cell(row, midx["clicks"]))}
+        if ch == "meta":
+            # compras do Meta vêm da PRÓPRIA aba do Meta (Purchases / Purchases Conversion Value), sem cruzar com a aba Compras
+            rec["pu"] = to_float(cell(row, midx["pu"]))
+            rec["pr"] = round(to_float(cell(row, midx["pr"])), 2)
         if ch == "google":
             rec["kw"] = _clean_kw(cell(row, midx["kw"])) or "(sem palavra-chave)"
         for k in ("vv3", "vv50", "vv95"):

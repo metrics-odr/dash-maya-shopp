@@ -171,9 +171,9 @@
           <div class="card"><h3>Conversão em compra por dia</h3><p class="hint">ConvCHK = Compras/Checkouts · Compras/Page View</p><div class="chart-box chart-sm"><canvas id="mConv"></canvas></div></div>
         </div>
 
-        <h2 class="sec-title">Compras por produto <span class="ch-name"></span></h2>
+        <h2 class="sec-title" id="mProdTitle">Compras por produto <span class="ch-name"></span></h2>
         <div class="funnel-charts">
-          <div class="card" style="padding:0"><div class="tbl-wrap" style="max-height:260px"><table class="dt" id="mProd"></table></div></div>
+          <div class="card" id="mProdCard" style="padding:0"><div class="tbl-wrap" style="max-height:260px"><table class="dt" id="mProd"></table></div></div>
           <div class="card" id="adBlock"><h3>Faturamento por anúncio</h3><p class="hint">Top 10 · utm_content</p><div class="chart-box chart-sm"><canvas id="mContent"></canvas></div></div>
         </div>
 
@@ -199,10 +199,10 @@
           <div class="pair-chart"><div class="pc-title">CAC por palavra-chave, por dia</div><canvas id="chKw"></canvas></div>
         </div>
         <p class="note" id="kwNote" hidden>Palavras-chave: a mídia vem da coluna de palavra-chave da aba Google Ads e as compras são cruzadas por <b>utm_term</b>. Compras sem utm_term ficam em “(sem palavra-chave)”; respeita o período e a campanha selecionada. <b>Clique numa palavra-chave</b> para filtrar campanhas, grupos e anúncios que a usam (Ctrl/Cmd+clique seleciona várias).</p>
-        <p class="note">Campanha/conjunto/anúncio vêm da aba de mídia; as compras são atribuídas por <b>utm_campaign</b> (e utm_content no Meta). O funil do GA4 não existe nesse nível, por isso as tabelas mostram mídia + compras.</p>
+        <p class="note" id="mCrossNote">Campanha/conjunto/anúncio vêm da aba de mídia; as compras são atribuídas por <b>utm_campaign</b> (e utm_content no Meta). O funil do GA4 não existe nesse nível, por isso as tabelas mostram mídia + compras.</p>
 
-        <h2 class="sec-title">Compradores <span class="pill q" id="qCount"></span></h2>
-        <div class="card" style="padding:0">
+        <h2 class="sec-title" id="buyersTitle">Compradores <span class="pill q" id="qCount"></span></h2>
+        <div class="card" id="buyersCard" style="padding:0">
           <div class="tbl-wrap" style="max-height:360px"><table class="dt" id="tQual"></table></div>
           <p class="note" style="padding:10px 15px">E‑mail <b>mascarado</b> (página pública). Últimos pedidos atribuídos ao canal.</p>
         </div>
