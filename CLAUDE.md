@@ -105,7 +105,7 @@ ligar: preencher o GID em `build/config.py`.
   **Purchases Conversion Value** da própria aba "Meta Ads📥" (campos `pu`/`pr` em `media[]`, lidos em `load_media`;
   `scopeData('meta')` em `app.js` os converte em vendas por campanha/conjunto/anúncio). As seções "Compras por produto"
   e "Compradores" ficam ocultas no Meta. **Visão Geral** continua com **todas as vendas da aba Compras** (sem cruzar com o Meta).
-  **Google Ads**: Compras = coluna **Conversions** e Faturamento = **Total conv. value** da aba "Google Ads📥" (campos `pu`/`pr`, também por palavra-chave), sem cruzar com a aba Compras; o funil do Google segue vindo do GA4. TikTok segue a regra abaixo (inalterado).
+  **Google Ads**: Compras = coluna **Conversions** e Faturamento = **Total conv. value** da aba "Google Ads📥" (campos `pu`/`pr`, também por palavra-chave; conversões fracionadas viram inteiras por arredondamento acumulado em `load_media`, preservando o total), sem cruzar com a aba Compras; o funil do Google segue vindo do GA4. TikTok segue a regra abaixo (inalterado).
 - **Compras** = nº de **Order IDs distintos** (a aba tem 1 linha por item); **Faturamento** = soma do
   **Preço** de todos os itens. Todas as compras contam (não há "produto principal"). Atribuição: canal
   pelo UTM; se `utm_campaign` bate com uma campanha das abas de mídia, a compra herda canal e nome

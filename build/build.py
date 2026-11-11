@@ -443,6 +443,7 @@ def load_media(rows, ch):
             rec["ac"] = to_float(cell(row, midx["ac"]))
             rec["ic"] = to_float(cell(row, midx["ic"]))
         if ch == "google":
+            # conversões do Google vêm fracionadas (atribuição por modelo): compras são sempre inteiras -> arredonda por linha
             rec["pu"] = to_float(cell(row, midx["pu"]))
             rec["pr"] = round(to_float(cell(row, midx["pr"])), 2)
             rec["kw"] = _clean_kw(cell(row, midx["kw"])) or "(sem palavra-chave)"
@@ -454,6 +455,13 @@ def load_media(rows, ch):
             st = cell(row, midx[f])
             rec[k] = is_active_status(st) if st else None
         out.append(rec)
+    if ch == "google":
+        # arredondamento acumulado: cada linha vira inteiro e a SOMA total das compras continua igual à da planilha
+        cum = prev = 0.0
+        for rec in out:
+            cum += rec["pu"]
+            cur = float(int(cum + 0.5))
+            rec["pu"], prev = cur - prev, cur
     return out, ad_links
 
 
