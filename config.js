@@ -19,7 +19,7 @@ window.CONFIG = {
 
   // Nome do repositório no GitHub (o mesmo que você usou ao criar o repo a
   // partir deste template).
-  GITHUB_REPOSITORY: "dash-maya-ecommerce",     // ex.: "dashboard-nome-do-cliente"
+  GITHUB_REPOSITORY: "dash-maya-shopp",     // ex.: "dashboard-nome-do-cliente"
 
   // Nome do projeto/cliente, usado só como referência em documentação e no
   // nome do Worker sugerido em ia-worker/wrangler.toml (ex.: "nomecliente-ia-insights").

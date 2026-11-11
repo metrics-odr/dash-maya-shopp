@@ -1,7 +1,7 @@
 # Ativação + configuração do cron-job.org (TEMPLATE)
 
-> owner/repo: `metrics-odr/dash-maya-ecommerce` · URL do Pages:
-> `https://metrics-odr.github.io/dash-maya-ecommerce/`. O **token
+> owner/repo: `metrics-odr/dash-maya-shopp` · URL do Pages:
+> `https://metrics-odr.github.io/dash-maya-shopp/`. O **token
 > nunca é comitado** no repositório: ele vai apenas no cron-job.org.
 
 ## Passo 1 — Colocar na branch `main` (uma vez)
@@ -10,14 +10,14 @@
 Faça o merge para a `main`. Na 1ª execução o workflow habilita o GitHub Pages
 automaticamente (`actions/configure-pages` com `enablement: true`).
 
-URL pública após publicar: `https://metrics-odr.github.io/dash-maya-ecommerce/`
+URL pública após publicar: `https://metrics-odr.github.io/dash-maya-shopp/`
 
 Disparar a 1ª execução na mão: aba **Actions** → *Build & Deploy Dashboard* → **Run workflow**.
 
 ## Passo 2 — Token (fine-grained, recomendado)
 
 GitHub → *Settings* → *Developer settings* → **Fine-grained tokens** → *Generate*:
-- Repository access: **Only select repositories → `dash-maya-ecommerce`**
+- Repository access: **Only select repositories → `dash-maya-shopp`**
 - Permissions → **Actions: Read and write**
 
 Guarde o token; ele vai só no cron-job.org.
@@ -26,7 +26,7 @@ Guarde o token; ele vai só no cron-job.org.
 
 ### URL
 ```
-https://api.github.com/repos/metrics-odr/dash-maya-ecommerce/actions/workflows/deploy.yml/dispatches
+https://api.github.com/repos/metrics-odr/dash-maya-shopp/actions/workflows/deploy.yml/dispatches
 ```
 ### Método
 ```
