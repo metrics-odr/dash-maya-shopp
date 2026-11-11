@@ -101,7 +101,7 @@ ligar: preencher o GID em `build/config.py`.
   utm_source/utm_medium das compras): **Google Ads = `google / cpc`**; Meta = facebook/fb/instagram/ig/meta
   com medium NÃO orgânico (referral/social/bio… = Outros); TikTok idem; o resto = **Outros**
   (só entra na Visão Geral). Listas ajustáveis (opcional) em `build/config.py`.
-- **Aba Meta Ads (sem cruzamento com a aba Compras)**: Compras e Faturamento vêm das colunas **Purchases** e
+- **Aba Meta Ads (tudo vem da aba do Meta, sem GA4 nem aba Compras)**: Page Views = **Landing Page Views**, Product View = **Content Views**, AddToCart = **Adds to Cart**, Checkouts = **Checkouts Initiated** (campos `lp`/`cv`/`ac`/`ic`); Compras e Faturamento vêm das colunas **Purchases** e
   **Purchases Conversion Value** da própria aba "Meta Ads📥" (campos `pu`/`pr` em `media[]`, lidos em `load_media`;
   `scopeData('meta')` em `app.js` os converte em vendas por campanha/conjunto/anúncio). As seções "Compras por produto"
   e "Compradores" ficam ocultas no Meta. **Visão Geral** continua com **todas as vendas da aba Compras** (sem cruzar com o Meta).

@@ -393,6 +393,7 @@ def load_media(rows, ch):
          "vv3": ["3-second video views", "3 second video views"],
          "vv50": ["video watches at 50%", "video watches 50%"],
          "vv95": ["video watches at 95%", "video watches 95%"],
+         "lp": ["landing page views"], "cv": ["content views"], "ac": ["adds to cart"], "ic": ["checkouts initiated"],
          "pu": ["purchases"], "pr": ["purchases conversion value"],
          "link": ["creative instagram permalink", "instagram permalink", "permalink",
                   "creative link", "link do anuncio", "link do criativo"],
@@ -403,7 +404,8 @@ def load_media(rows, ch):
     if ch == "meta":
         # Purchases / Purchases Conversion Value: match EXATO primeiro ("purchases" é substring do outro)
         hn = [norm(h) for h in rows[0]]
-        for k, name in (("pu", "purchases"), ("pr", "purchases conversion value")):
+        for k, name in (("pu", "purchases"), ("pr", "purchases conversion value"), ("lp", "landing page views"),
+                        ("cv", "content views"), ("ac", "adds to cart"), ("ic", "checkouts initiated")):
             if name in hn:
                 midx[k] = hn.index(name)
     out, ad_links = [], {}
@@ -429,6 +431,12 @@ def load_media(rows, ch):
             # compras do Meta vêm da PRÓPRIA aba do Meta (Purchases / Purchases Conversion Value), sem cruzar com a aba Compras
             rec["pu"] = to_float(cell(row, midx["pu"]))
             rec["pr"] = round(to_float(cell(row, midx["pr"])), 2)
+            # funil do Meta também vem da aba do Meta (não do GA4): Page Views = Landing Page Views, Product View = Content Views,
+            # AddToCart = Adds to Cart, Checkouts = Checkouts Initiated
+            rec["lp"] = to_float(cell(row, midx["lp"]))
+            rec["cv"] = to_float(cell(row, midx["cv"]))
+            rec["ac"] = to_float(cell(row, midx["ac"]))
+            rec["ic"] = to_float(cell(row, midx["ic"]))
         if ch == "google":
             rec["kw"] = _clean_kw(cell(row, midx["kw"])) or "(sem palavra-chave)"
         for k in ("vv3", "vv50", "vv95"):

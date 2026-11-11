@@ -58,7 +58,7 @@ function dateActive(d){
    pvp : page views só dos canais pagos (base de CR e CPV — evita dividir tráfego orgânico por cliques pagos)
    vendas = nº de pedidos (Order IDs distintos) · fat = soma do Preço dos itens · n = itens */
 function newBucket(){return {sp:0,im:0,cl:0,pv:0,pvp:0,vi:0,atc:0,ck:0,vv3:0,vv50:0,vv95:0,vendas:0,fat:0,n:0};}
-function addMedia(a,r){ a.sp+=spx(r); a.im+=r.im; a.cl+=r.cl; a.vv3+=r.vv3||0; a.vv50+=r.vv50||0; a.vv95+=r.vv95||0; }
+function addMedia(a,r){ if(r._f){ a.pv+=r.lp||0; a.pvp+=r.lp||0; a.vi+=r.cv||0; a.atc+=r.ac||0; a.ck+=r.ic||0; } a.sp+=spx(r); a.im+=r.im; a.cl+=r.cl; a.vv3+=r.vv3||0; a.vv50+=r.vv50||0; a.vv95+=r.vv95||0; }
 function addGa(a,r){ a.pv+=r.pv; if(r.ch!=='outros') a.pvp+=r.pv; a.vi+=r.vi; a.atc+=r.atc; a.ck+=r.ck; }
 function addSales(a,r){ a.vendas+=r.main; a.fat+=r.val; a.n+=r.n; }
 function derive(a){
@@ -134,6 +134,7 @@ function scopeData(ch, ex, win, gf){
   if(sel) fG=[];
   /* Aba Meta Ads: compras/faturamento vêm das colunas Purchases e Purchases Conversion Value da própria
      aba do Meta (linhas de mídia) — NÃO há cruzamento com a aba Compras. Visão Geral segue com todas as vendas. */
+  if(ch==='meta'){ fG=[]; sel=false; fM=fM.map(r=>Object.assign({_f:1},r)); }   /* funil do Meta também vem da aba do Meta (não do GA4) */
   if(ch==='meta') fS=fM.filter(r=>r.pu||r.pr).map(r=>({d:r.d,ch:'meta',camp:r.camp,adset:r.adset,ad:r.ad,prod:'—',main:r.pu||0,val:r.pr||0,n:r.pu||0}));
   return {fM,fS,fG,sel};
 }
@@ -736,6 +737,9 @@ function renderChannel(){
   ['mProdCard','buyersTitle','buyersCard'].forEach(id=>{ const e=document.getElementById(id); if(e) e.hidden=isMeta; });
   if(!isMeta) renderProdTable('mProd', S.fS);
   const pt=document.getElementById('mProdTitle'); if(pt) pt.textContent=isMeta?'Faturamento por anúncio':'Compras por produto';
+  const fn=document.getElementById('mFunnelNote');
+  if(fn){ if(fn.dataset.orig===undefined) fn.dataset.orig=fn.innerHTML;
+    fn.innerHTML=isMeta?'Considera <b>apenas o canal Meta Ads</b>: tudo vem da aba do Meta — gasto/impressões/cliques, Page Views = <b>Landing Page Views</b>, Product View = <b>Content Views</b>, AddToCart = <b>Adds to Cart</b>, Checkouts = <b>Checkouts Initiated</b>, Compras = <b>Purchases</b> e Faturamento = <b>Purchases Conversion Value</b>.':fn.dataset.orig; }
   const cn=document.getElementById('mCrossNote');
   if(cn){ if(cn.dataset.orig===undefined) cn.dataset.orig=cn.innerHTML;
     cn.innerHTML=isMeta?'Meta Ads: <b>Compras</b> e <b>Faturamento</b> vêm das colunas <b>Purchases</b> e <b>Purchases Conversion Value</b> da própria aba do Meta — sem cruzamento com a aba Compras. O funil do GA4 não existe nesse nível, por isso as tabelas mostram mídia + compras do Meta.':cn.dataset.orig; }
