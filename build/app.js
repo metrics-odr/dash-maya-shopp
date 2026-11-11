@@ -119,6 +119,9 @@ function rollup(dd,g){
    -> só aquele canal, com o drill-down Campanha→Conjunto→Anúncio (`ex` = dimensão a NÃO filtrar,
    para a própria tabela mostrar todas as suas linhas). win = janela custom (período anterior).
    O GA4 não tem campanha/anúncio: com qualquer seleção ativa o funil do GA4 sai do escopo (sel=true). */
+/* Meta e Google: compras/faturamento vêm das colunas da própria aba de mídia (Meta: Purchases / Purchases Conversion Value;
+   Google: Conversions / Total conv. value) — linhas de mídia viram "vendas" por campanha/conjunto/anúncio/palavra-chave. */
+function mediaSales(fM){ return fM.filter(r=>r.pu||r.pr).map(r=>({d:r.d,ch:r.ch,src:r.ch,camp:r.camp,adset:r.adset,ad:r.ad,kw:r.kw,prod:'—',main:r.pu||0,val:r.pr||0,n:r.pu||0})); }
 function scopeData(ch, ex, win, gf){
   const ok = win ? (d=>inRange(d,win.from,win.to)) : dateActive;
   const f = r => ok(r.d) && (!ch || r.ch===ch) && (!gf || geralMatch(r));
@@ -135,7 +138,7 @@ function scopeData(ch, ex, win, gf){
   /* Aba Meta Ads: compras/faturamento vêm das colunas Purchases e Purchases Conversion Value da própria
      aba do Meta (linhas de mídia) — NÃO há cruzamento com a aba Compras. Visão Geral segue com todas as vendas. */
   if(ch==='meta'){ fG=[]; sel=false; fM=fM.map(r=>Object.assign({_f:1},r)); }   /* funil do Meta também vem da aba do Meta (não do GA4) */
-  if(ch==='meta') fS=fM.filter(r=>r.pu||r.pr).map(r=>({d:r.d,ch:'meta',camp:r.camp,adset:r.adset,ad:r.ad,prod:'—',main:r.pu||0,val:r.pr||0,n:r.pu||0}));
+  if(ch==='meta'||ch==='google') fS=mediaSales(fM);
   return {fM,fS,fG,sel};
 }
 
@@ -733,16 +736,17 @@ function renderChannel(){
   document.getElementById('adBlock').hidden=!realAds.length;
   document.getElementById('adTableBlock').hidden=!realAds.length;
   hbar('mContent', realAds.map(([label,a])=>({label,v:a.fat})), x=>x.v, cvar('--chart-faturamento'), 10, brl);
-  const isMeta=ch==='meta';
-  ['mProdCard','buyersTitle','buyersCard'].forEach(id=>{ const e=document.getElementById(id); if(e) e.hidden=isMeta; });
-  if(!isMeta) renderProdTable('mProd', S.fS);
-  const pt=document.getElementById('mProdTitle'); if(pt) pt.textContent=isMeta?'Faturamento por anúncio':'Compras por produto';
+  const isMeta=ch==='meta', isMedia=isMeta||ch==='google';
+  ['mProdCard','buyersTitle','buyersCard'].forEach(id=>{ const e=document.getElementById(id); if(e) e.hidden=isMedia; });
+  if(!isMedia) renderProdTable('mProd', S.fS);
+  const pt=document.getElementById('mProdTitle'); if(pt){ pt.textContent=isMedia?'Faturamento por anúncio':'Compras por produto'; pt.hidden=isMedia&&!realAds.length; }
   const fn=document.getElementById('mFunnelNote');
   if(fn){ if(fn.dataset.orig===undefined) fn.dataset.orig=fn.innerHTML;
     fn.innerHTML=isMeta?'Considera <b>apenas o canal Meta Ads</b>: tudo vem da aba do Meta — gasto/impressões/cliques, Page Views = <b>Landing Page Views</b>, Product View = <b>Content Views</b>, AddToCart = <b>Adds to Cart</b>, Checkouts = <b>Checkouts Initiated</b>, Compras = <b>Purchases</b> e Faturamento = <b>Purchases Conversion Value</b>.':fn.dataset.orig; }
   const cn=document.getElementById('mCrossNote');
   if(cn){ if(cn.dataset.orig===undefined) cn.dataset.orig=cn.innerHTML;
-    cn.innerHTML=isMeta?'Meta Ads: <b>Compras</b> e <b>Faturamento</b> vêm das colunas <b>Purchases</b> e <b>Purchases Conversion Value</b> da própria aba do Meta — sem cruzamento com a aba Compras. O funil do GA4 não existe nesse nível, por isso as tabelas mostram mídia + compras do Meta.':cn.dataset.orig; }
+    cn.innerHTML=isMeta?'Meta Ads: <b>Compras</b> e <b>Faturamento</b> vêm das colunas <b>Purchases</b> e <b>Purchases Conversion Value</b> da própria aba do Meta — sem cruzamento com a aba Compras. O funil do GA4 não existe nesse nível, por isso as tabelas mostram mídia + compras do Meta.'
+      :ch==='google'?'Google Ads: <b>Compras</b> = coluna <b>Conversions</b> e <b>Faturamento</b> = <b>Total conv. value</b> da própria aba do Google — sem cruzamento com a aba Compras. O funil do GA4 não existe nesse nível, por isso as tabelas mostram mídia + compras do Google.':cn.dataset.orig; }
 
   const dl=dd.slice().reverse();
   renderTable({id:'tDaily', cols:ch==='meta'?META_DAILY_COLS:DAILY_COLS,
@@ -777,7 +781,7 @@ function renderChannel(){
   document.getElementById('kwTableBlock').hidden=!kwOn; document.getElementById('kwNote').hidden=!kwOn;
   if(kwOn){
     const kf=r=>r.ch===ch && dateActive(r.d) && (!STATE.mSelC.size||STATE.mSelC.has(r.camp));
-    const kM=MEDIA.filter(kf), kS=SALES.filter(kf).filter(r=>r.kw);
+    const kM=MEDIA.filter(kf), kS=mediaSales(kM);
     const kAgg=buildAgg(kS,kM,'kw');
     let kRows=Object.entries(kAgg).map(([k,a])=>({k, cells:Object.assign({dim:k}, metricCells(a,derive(a)))}))
       .sort((a,b)=>(b.cells.gasto-a.cells.gasto)||(b.cells.vendas-a.cells.vendas));
@@ -788,7 +792,7 @@ function renderChannel(){
   }
 
   /* Compradores: últimos pedidos (PII mascarada), respeitando canal + período */
-  const rows=ch==='meta'?[]:BUYERS.filter(b=>b.ch===ch && dateActive(b.d));
+  const rows=(ch==='meta'||ch==='google')?[]:BUYERS.filter(b=>b.ch===ch && dateActive(b.d));
   document.getElementById('qCount').textContent=rows.length+' compras';
   renderTable({id:'tQual',
     cols:[{key:'d',label:'Data',type:'date'},{key:'nm',label:'Nome',type:'dim'},{key:'prod',label:'Produto',type:'dim',big:true},

@@ -401,6 +401,11 @@ def load_media(rows, ch):
          "adset_status": ["ad set status", "adset status", "status do conjunto"],
          "ad_status": ["ad status", "status do anuncio"]},
         {"day": 0, "campaign": 1, "adset": 2, "ad": 3, "spent": 4})
+    if ch == "google":
+        # Google: Conversions = compras e Total conv. value = valor das compras (aba do próprio Google, sem cruzar com a aba Compras)
+        hn = [norm(h) for h in rows[0]]
+        midx["pu"] = hn.index("conversions") if "conversions" in hn else None
+        midx["pr"] = hn.index("total conv. value") if "total conv. value" in hn else None
     if ch == "meta":
         # Purchases / Purchases Conversion Value: match EXATO primeiro ("purchases" é substring do outro)
         hn = [norm(h) for h in rows[0]]
@@ -438,6 +443,8 @@ def load_media(rows, ch):
             rec["ac"] = to_float(cell(row, midx["ac"]))
             rec["ic"] = to_float(cell(row, midx["ic"]))
         if ch == "google":
+            rec["pu"] = to_float(cell(row, midx["pu"]))
+            rec["pr"] = round(to_float(cell(row, midx["pr"])), 2)
             rec["kw"] = _clean_kw(cell(row, midx["kw"])) or "(sem palavra-chave)"
         for k in ("vv3", "vv50", "vv95"):
             v = to_float(cell(row, midx[k]))
